@@ -22,15 +22,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // defining global variable
-    var appId = "";
+    var server = "http://notifications.test.netflix.net";
+    var appId = "default";
     var targetElement = document.body;
     if (document.getElementById("nf-notifier-div") != null) {
         targetElement = document.getElementById("nf-notifier-div");
-        appId = targetElement.getAttribute("data-appid");
-        if (appId == null) {
-            appId = "default";
-        }
+        appId = targetElement.getAttribute("data-appid") || "appId";
+        server = targetElement.getAttribute("data-server") || server;
     }
 
     // adding a wrapper for notification element
@@ -127,8 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Regularly pulling for data
     var loadData = function () {
         var req = new XMLHttpRequest();
-        // TODO: Add server name to the set of div inputs
-        req.open("GET", "http://notifications.test.netflix.net/getAllNotificationsCached?time=" + Math.random(), true);
+        req.open("GET", server + "/getAllNotificationsCached?time=" + Math.random(), true);
         req.onload = function () {
             showNotification(JSON.parse(req.responseText));
         };
