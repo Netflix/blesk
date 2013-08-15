@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<?python from genshi import HTML ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/">
+      <xi:include href="layout.html" />
+    <head>
+        <?python import itertools?>
+        <title>SLA and Availability Reporting - Profiling Information</title>
+    </head>
+    <body>
+        <p/>
+        <xi:include href="nav.html"/>
+        <p/>
+        <p/>
+        <h3>Profiling Information</h3>
+        <table border="1" class="sortable">
+            <tr>
+                <th>Name</th>
+                <th>Times Called</th>
+                <th>Total Time Spent</th>
+                <th>Average Time Spent</th>
+            </tr>
+            <tr py:for="row in content['profile_info']">
+                <td>${row.name}</td>
+                <td>${row.timescalled}</td>
+                <td>${row.totaltime}</td>
+                <td>${row.avgtime}</td>
+            </tr>
+        </table>
+    </body>
+</html>

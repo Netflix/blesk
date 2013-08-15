@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<?python from genshi import HTML ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:py="http://genshi.edgewall.org/">
+  <xi:include href="layout.html" />
+  <head>
+    <?python import itertools?>
+    <?python import time?>
+    <script type="text/javascript" src="${url('/media/js/jquery.js')}"></script>
+    <script type="text/javascript" src="${url('/media/js/common.js')}"></script>
+    <script type="text/javascript" src="${url('/media/js/css.js')}"></script>
+    <script type="text/javascript" src="${url('/media/js/standardista-table-sorting.js')}"></script>
+    <title>Availability Reporting</title>
+   </head>
+  <body class="index">
+    <p/>
+    <xi:include href="nav.html"/>
+    <p/>
+    <p/>
+   <div py:for="message in content.get('messages', [])">
+        <font color="green">
+            ${HTML(message)}
+            <br/>
+        </font>
+    </div>
+     <div py:for="warning in content.get('warnings', [])">
+        <font color="red">
+            <b>WARNING:</b>
+            ${HTML(warning)}
+            <br/>
+        </font>
+    </div>
+        <h3>
+            Day Data Dump
+        </h3>
+        <h2>
+            Table of Contents:
+        </h2>
+        <ol>
+            <li><a href="#main table">Sortable table</a></li>
+            <li py:for="name in content['tables']">
+                <a href="#${name}">${name}</a>
+            </li>
+        </ol>
+        
+        <a name="main table"></a>
+        <table border="1" class="sortable">
+            <thead>
+                <tr>
+                    <th py:for="header in content['table']['headers']">
+                        ${header}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr py:for="row in content['table']['rows']">
+                    <td py:for="header in content['table']['headers']">
+                        ${row.get(header)}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>
+            Sorted versions of the above by each metric type
+        </h3>
+        <div py:for="table in content['tables']">
+            <a name="${table}"></a>
+            <h4>
+                Dump sorted by ${table}
+            </h4>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th py:for="header in content['tables'][table]['headers']">
+                            ${header}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr py:for="row in content['tables'][table]['rows']">
+                        <td py:for="header in content['tables'][table]['headers']">
+                            ${row.get(header)}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
