@@ -1,0 +1,47 @@
+#!/bin/bash
+#
+# chkconfig: 345 99 30
+# description: Starts and stops the notifications service
+
+source /etc/profile.d/netflix_environment.sh
+
+start() {
+    if [ x"$NETFLIX_STACK" != "xbatch" ]; then
+        if [ x"$EC2_REGION" == "xus-east-1" ]; then
+            /apps/notifications/route53.py --name notifications --register --exclusive >> /tmp/r53 2>&1
+        fi
+        if [ x"$EC2_REGION" != "x" ]; then
+            /apps/notifications/route53.py --name notifications.${EC2_REGION} --register --exclusive >> /tmp/r53 2>&1
+        fi
+    fi
+    python2.7 /apps/notifications/jiraPuller.py > /apps/notifications/jira-puller.log 2>&1  &
+    /apps/notifications/server.py > /apps/notifications/server-new.log 2>&1  &
+}
+
+stop() {
+    if [ x"$NETFLIX_STACK" != "xbatch" ]; then
+        if [ x"$EC2_REGION" == "xus-east-1" ]; then
+            /apps/notifications/route53.py --name notifications --deregister >> /tmp/r53 2>&1
+        fi
+        if [ x"$EC2_REGION" != "x" ]; then
+            /apps/notifications/route53.py --name notifications.${EC2_REGION} --deregister  >> /tmp/r53 2>&1
+        fi
+    fi
+    killall server.py
+}
+
+case "$1" in
+start)
+	start
+        ;;
+stop)
+	stop
+        ;;
+restart)
+	stop
+	start
+	;;
+* )
+        echo "Usage: $0 (start | stop | restart)"
+        exit 1
+esac

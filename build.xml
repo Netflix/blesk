@@ -1,0 +1,8 @@
+<project name="nflx-Notifications" default="help">
+    <import file="../../../Tools/build/tree2rpm.xml"/>
+    <target name="us-bake">
+        <parallel>
+            <ezBake application="nflx-Notifications" region="us-east-1" />
+        </parallel>
+    </target>
+</project>

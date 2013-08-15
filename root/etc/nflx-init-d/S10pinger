@@ -1,0 +1,73 @@
+#!/usr/bin/env python2.7
+#
+# $Id: //depot/cloud/rpms/nflx-availability/root/etc/nflx-init-d/S10pinger#2 $
+# $DateTime: 2012/03/19 14:51:25 $
+# $Change: 1309791 $
+#
+
+# prime IP routing to active instances of infrastrcuture services
+
+import sys, signal
+sys.path.append("/apps/nflx-cloudsol-python-libs")
+
+import Discovery
+from threading import Thread
+from ping import quiet_ping
+
+# Discovery app names of infrastructure services
+appnames = [
+   "CRYPTEX",
+   "CASS_MERCH",
+   "CHUKWACOLLECTOR",
+   "DISCOVERY",
+   "EPICPROXY",
+   "EPICPROXY_V2",
+   "GEO",
+   "NTSSERVICELOGGING",
+   "PLATFORMSERVICE",
+   "RTABUS"
+]
+
+# abort the script after this many seconds
+max_run_time = 10
+
+def alrmHandler(signum, frame):
+    print >> sys.stderr, "No more waiting."
+    sys.exit(0)
+
+class PingAgent(Thread):
+    def __init__(self, host, app):
+        Thread.__init__(self)
+        self.host = host
+        self.app = app
+
+    def run(self):
+        try:
+            p = quiet_ping( host, timeout=1, count=1 )
+        except:
+            pass
+	if p[0] > 0:
+	# packet loss
+	    print ("%s\t%s\t no response.\n" % ( self.app, self.host ))
+	else:
+	    print ("%s\t%s\t %1.2fms\n" % ( self.app, self.host, p[1] ))
+
+if __name__ == '__main__':
+
+    signal.signal(signal.SIGALRM, alrmHandler)
+    signal.alarm(max_run_time)
+
+    disco = Discovery.Discovery()
+    threads = []
+
+    # spawn a ping thread for each instance.
+    for app in appnames:
+        publicNames = disco.getUpInstances(app)
+        for host in publicNames:
+            pinger = PingAgent(host, app)
+            pinger.start()
+            threads.append( pinger )
+
+    for t in threads:
+        t.join( timeout=1 )
+
