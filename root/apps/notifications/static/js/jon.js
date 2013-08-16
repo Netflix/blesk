@@ -81,11 +81,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (notText.length > 0) {
             var notificationText = document.createElement("div");
             notificationText.id = "notification-div";
-            var styleForNotificationType = "";
-            notificationText.innerHTML = "<div style=\"float: left; " + styleForNotificationType + "\"><strong>" + notType + ": </strong>" + notText + "</div>";
-            notificationText.className = "nf-notifier";
+            notificationText.innerHTML = "<div class=\"bleskInner\"><strong>" + notType + ": </strong>" + notText + "</div>";
+            notificationText.className = "bleskInner";
             var close = document.createElement("div");
-            close.className = "nf-notifier-close";
+            close.className = "bleskClose";
             close.innerHTML = "&times;";
             close.id = "nf-notifier-close-element";
             notificationText.appendChild(close);
@@ -93,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 //alert(getValue("blesknotifications"));
                 if ((getValue("blesknotifications" + appId) == null) || (notText != getValue("blesknotifications" + appId))) {
 
-                    targetElement.innerHTML = "<div id=\"nf-notifier-element\" class=\"nf-notifier\">" + notificationText.innerHTML + "</div><div style=\"clear:both\"></div>" + targetElementInnerHtml;
+                    targetElement.innerHTML = "<div id=\"bleskOuter\" class=\"bleskOuter\">" + notificationText.innerHTML + "</div><div style=\"clear:both\"></div>" + targetElementInnerHtml;
                     document.getElementById("nf-notifier-close-element").addEventListener("click", function () {
                         document.getElementById("nf-notifier-element").style.display = "none";
                         setValue("blesknotifications" + appId, notText);
