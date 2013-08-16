@@ -1,7 +1,5 @@
 // wrapping everything into one function - so that nothing is polluting the rest of js code
 document.addEventListener('DOMContentLoaded', function () {
-    // two functions
-    // wrap() main functions that wraps
     // setValue - getValue - functions to store and retrieve notifications text (using localStorage instead of cookies)
     // showNotifications() process the notifcations and place it on the page
     // loadData() load the current notifications
@@ -16,8 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function getValue(key) {
         if (window.localStorage) {
             return localStorage.getItem(key)
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -33,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // adding a wrapper for notification element
     if (targetElement == document.body) {
-        //console.log("here");
         var firstAfterBody = document.createElement("div");
         document.body.insertBefore(firstAfterBody, document.body.firstChild);
         targetElement = firstAfterBody;
@@ -42,75 +38,70 @@ document.addEventListener('DOMContentLoaded', function () {
     var targetElementInnerHtml = targetElement.innerHTML;
 
     // Create show notification data handler
-    var showNotification = function (data) {
+    var showNotification = function(data) {
 
-        var obj;
-        var notText = "";
-        var notType = "";
-
-        // storing notification overrider
-        // keyword = appId = all
-        var globalNotText = "";
-        var globalNotType = "";
+        var obj,
+            notificationText = "",
+            notificationType = "",
+            globalNotificationText = "",
+            globalNotificationType = "",
+            i,
+            notificationTextContainer,
+            close;
 
         //console.log(data);
-        for (var i = 0; i < data.length; i++) {
+        for (i = 0; i < data.length; i++) {
             //console.log(data[i][1].appId);
             if (data[i][1].appId == appId) {
-                notText = data[i][1].message + " ";
-                notType = data[i][1].alertType;
+                notificationText = data[i][1].message + " ";
+                notificationType = data[i][1].alertType;
             }
 
             if (data[i][1].appId == "all") {
-                globalNotText = data[i][1].message + " ";
-                globalNotType = data[i][1].alertType;
+                globalNotificationText = data[i][1].message + " ";
+                globalNotificationType = data[i][1].alertType;
             }
         }
 
-        if (globalNotText) {
-            if (notText) {
-                notText = globalNotText + " | <strong>" + notType + ":</strong> " + notText;
-                notType = globalNotType;
+        if (globalNotificationText) {
+            if (notificationText) {
+                notificationText = globalNotificationText + " | <strong>" + notificationType + ":</strong> " + notificationText;
+            } else {
+                notificationText = globalNotificationText;
             }
-            else {
-                notText = globalNotText;
-                notType = globalNotType;
-            }
+            notificationType = globalNotificationType;
         }
 
-        if (notText.length > 0) {
-            var notificationText = document.createElement("div");
-            notificationText.id = "notification-div";
-            notificationText.innerHTML = "<div class=\"bleskInner\"><strong>" + notType + ": </strong>" + notText + "</div>";
-            notificationText.className = "bleskInner";
-            var close = document.createElement("div");
+        if (notificationText.length > 0) {
+            notificationTextContainer = document.createElement("div");
+            notificationTextContainer.id = "notification-div";
+            notificationTextContainer.innerHTML = "<div class=\"bleskInner\"><strong>" + notificationType + ": </strong>" + notificationText + "</div>";
+            notificationTextContainer.className = "bleskInner";
+            close = document.createElement("div");
             close.className = "bleskClose";
             close.innerHTML = "&times;";
             close.id = "bleskClose";
-            notificationText.appendChild(close);
-            if (notText.length > 0) {
+            notificationTextContainer.appendChild(close);
+            if (notificationText.length > 0) {
                 //alert(getValue("blesknotifications"));
-                if ((getValue("blesknotifications" + appId) == null) || (notText != getValue("blesknotifications" + appId))) {
+                if ((getValue("blesknotifications" + appId) == null) || (notificationText != getValue("blesknotifications" + appId))) {
 
-                    targetElement.innerHTML = "<div id=\"bleskOuter\" class=\"bleskOuter\">" + notificationText.innerHTML + "</div><div style=\"clear:both\"></div>" + targetElementInnerHtml;
+                    targetElement.innerHTML = "<div id=\"bleskOuter\" class=\"bleskOuter\">" + notificationTextContainer.innerHTML + "</div><div style=\"clear:both\"></div>" + targetElementInnerHtml;
                     document.getElementById("bleskClose").addEventListener("click", function () {
                         document.getElementById("blesk").style.display = "none";
-                        setValue("blesknotifications" + appId, notText);
+                        setValue("blesknotifications" + appId, notificationText);
                     });
 
-                }
-                else {
+                } else {
                     // closing float
                     targetElement.innerHTML = "<div style=\"clear:both\"></div>" + targetElementInnerHtml;
                 }
-            }
-            else {
+            } else {
                 // closing float
                 targetElement.innerHTML = "<div style=\"clear:both\"></div>" + targetElementInnerHtml;
             }
 
-        }
-        else {
+        } else {
             //console.log("removing");
             obj = document.getElementById("blesk");
             if (obj != null) {
