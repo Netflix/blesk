@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    var server = "http://notifications.test.netflix.net";
+    var server = "http://blesk";
     var appId = "default";
     var targetElement = document.body;
     if (document.getElementById("blesk") != null) {
