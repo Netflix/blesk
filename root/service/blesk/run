@@ -1,0 +1,13 @@
+#! /usr/bin/env bash
+
+export PATH=/usr/bin:/usr/local/bin:/usr/sbin:/bin
+
+if [ -e /etc/profile.d/netflix_environment.sh ]; then
+    source /etc/profile.d/netflix_environment.sh
+fi
+
+# Make the log directory
+mkdir -p /logs/blesk
+
+# Start the app
+python2.7 /apps/blesk/server.py -c /apps/blesk/config/blesk.config  --log-file /logs/blesk/blesk.log >> /logs/blesk/startup.log 2>&1
