@@ -25,8 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var server = "http://notifications.test.netflix.net";
     var appId = "default";
     var targetElement = document.body;
-    if (document.getElementById("nf-notifier-div") != null) {
-        targetElement = document.getElementById("nf-notifier-div");
+    if (document.getElementById("blesk") != null) {
+        targetElement = document.getElementById("blesk");
         appId = targetElement.getAttribute("data-appid") || "appId";
         server = targetElement.getAttribute("data-server") || server;
     }
@@ -86,15 +86,15 @@ document.addEventListener('DOMContentLoaded', function () {
             var close = document.createElement("div");
             close.className = "bleskClose";
             close.innerHTML = "&times;";
-            close.id = "nf-notifier-close-element";
+            close.id = "bleskClose";
             notificationText.appendChild(close);
             if (notText.length > 0) {
                 //alert(getValue("blesknotifications"));
                 if ((getValue("blesknotifications" + appId) == null) || (notText != getValue("blesknotifications" + appId))) {
 
                     targetElement.innerHTML = "<div id=\"bleskOuter\" class=\"bleskOuter\">" + notificationText.innerHTML + "</div><div style=\"clear:both\"></div>" + targetElementInnerHtml;
-                    document.getElementById("nf-notifier-close-element").addEventListener("click", function () {
-                        document.getElementById("nf-notifier-element").style.display = "none";
+                    document.getElementById("bleskClose").addEventListener("click", function () {
+                        document.getElementById("blesk").style.display = "none";
                         setValue("blesknotifications" + appId, notText);
                     });
 
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         else {
             //console.log("removing");
-            obj = document.getElementById("nf-notifier-element");
+            obj = document.getElementById("blesk");
             if (obj != null) {
                 targetElement.removeChild(obj);
             }
