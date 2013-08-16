@@ -1,3 +1,4 @@
+"use strict";
 // wrapping everything into one function - so that nothing is polluting the rest of js code
 document.addEventListener('DOMContentLoaded', function () {
     // setValue - getValue - functions to store and retrieve notifications text (using localStorage instead of cookies)
@@ -7,46 +8,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function setValue(key, value) {
         if (window.localStorage) {
-            localStorage.setItem(key, value)
+            localStorage.setItem(key, value);
         }
     }
 
     function getValue(key) {
         if (window.localStorage) {
-            return localStorage.getItem(key)
-        } else {
-            return null;
+            return localStorage.getItem(key);
         }
+        return null;
     }
 
-    var server = "http://blesk";
-    var appId = "default";
-    var targetElement = document.body;
-    if (document.getElementById("blesk") != null) {
+    var server = "http://notification.test.netflix.net",
+        appId = "default",
+        targetElement = document.body,
+        firstAfterBody,
+        targetElementInnerHtml,
+        stylesheet,
+        showNotification,
+        loadData;
+
+    if (document.getElementById("blesk")) {
         targetElement = document.getElementById("blesk");
         appId = targetElement.getAttribute("data-appid") || "appId";
         server = targetElement.getAttribute("data-server") || server;
     }
 
     // adding a wrapper for notification element
-    if (targetElement == document.body) {
-        var firstAfterBody = document.createElement("div");
+    if (targetElement === document.body) {
+        firstAfterBody = document.createElement("div");
         document.body.insertBefore(firstAfterBody, document.body.firstChild);
         targetElement = firstAfterBody;
     }
 
-    var targetElementInnerHtml = targetElement.innerHTML;
+    targetElementInnerHtml = targetElement.innerHTML;
 
     function addCSSRule(sheet, selector, rules, index) {
-        if(sheet.insertRule) {
+        if (sheet.insertRule) {
             sheet.insertRule(selector + "{" + rules + "}", index);
-        }
-        else {
+        } else {
             sheet.addRule(selector, rules, index);
         }
     }
 
-    var stylesheet = (function() {
+    stylesheet = (function() {
         var style = document.createElement("style");
 
         // WebKit hack :(
@@ -63,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
     addCSSRule(stylesheet, ".bleskClose", "display: inline-block; right: 20px; vertical-align: top; cursor: pointer; text-align: right; font-size: 26px; font-weight: bold; line-height: 0.6em;");
 
     // Create show notification data handler
-    var showNotification = function(data) {
+    showNotification = function(data) {
 
         var obj,
             notificationText = "",
@@ -77,12 +82,12 @@ document.addEventListener('DOMContentLoaded', function () {
         //console.log(data);
         for (i = 0; i < data.length; i++) {
             //console.log(data[i][1].appId);
-            if (data[i][1].appId == appId) {
+            if (data[i][1].appId === appId) {
                 notificationText = data[i][1].message + " ";
                 notificationType = data[i][1].alertType;
             }
 
-            if (data[i][1].appId == "all") {
+            if (data[i][1].appId === "all") {
                 globalNotificationText = data[i][1].message + " ";
                 globalNotificationType = data[i][1].alertType;
             }
@@ -109,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
             notificationTextContainer.appendChild(close);
             if (notificationText.length > 0) {
                 //alert(getValue("blesknotifications"));
-                if ((getValue("blesknotifications" + appId) == null) || (notificationText != getValue("blesknotifications" + appId))) {
+                if ((!getValue("blesknotifications" + appId)) || (notificationText !== getValue("blesknotifications" + appId))) {
 
                     targetElement.innerHTML = "<div id=\"bleskOuter\" class=\"bleskOuter\">" + notificationTextContainer.innerHTML + "</div><div style=\"clear:both\"></div>" + targetElementInnerHtml;
                     document.getElementById("bleskClose").addEventListener("click", function () {
@@ -129,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             //console.log("removing");
             obj = document.getElementById("blesk");
-            if (obj != null) {
+            if (obj) {
                 targetElement.removeChild(obj);
             }
 
@@ -138,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // Regularly pulling for data
-    var loadData = function () {
+    loadData = function () {
         var req = new XMLHttpRequest();
         req.open("GET", server + "/getAllNotificationsCached?time=" + Math.random(), true);
         req.onload = function () {
