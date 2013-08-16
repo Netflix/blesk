@@ -37,6 +37,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var targetElementInnerHtml = targetElement.innerHTML;
 
+    function addCSSRule(sheet, selector, rules, index) {
+        if(sheet.insertRule) {
+            sheet.insertRule(selector + "{" + rules + "}", index);
+        }
+        else {
+            sheet.addRule(selector, rules, index);
+        }
+    }
+
+    var stylesheet = (function() {
+        var style = document.createElement("style");
+
+        // WebKit hack :(
+        style.appendChild(document.createTextNode(""));
+
+        // Add the <style> element to the page
+        document.body.appendChild(style);
+
+        return style.sheet;
+    })();
+
+    addCSSRule(stylesheet, ".bleskOuter", "background-color: #DFF0D8; border-radius: 4px; border: 1px solid #D6E9C6; color: #468847; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 20px; padding: 8px 0 8px 14px; text-shadow: rgba(255, 255, 255, 0.498039) 0 1px 0; margin-bottom: 10px;");
+    addCSSRule(stylesheet, ".bleskInner", "max-width: 94%; display: inline-block; min-width: 94%; padding-right: 2%;");
+    addCSSRule(stylesheet, ".bleskClose", "display: inline-block; right: 20px; vertical-align: top; cursor: pointer; text-align: right; font-size: 26px; font-weight: bold; line-height: 0.6em;");
+
     // Create show notification data handler
     var showNotification = function(data) {
 
