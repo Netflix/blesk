@@ -1,17 +1,11 @@
-# RPM Spec file for @name@ v.@version@
-
-# $Id: //depot/cloud/rpms/nflx-cloudsol-python-libs/conf/rpm.spec#31 $
-# $DateTime: 2011/08/05 12:07:47 $
-# $Change: 964942 $
-
 %define _topdir         @target.dir@
 %define name            @name@
 %define version         @version@
 %define release         @release@
-%define summary     notifications
+%define summary     blesk
 %define buildarch   noarch
 %define license     NFLX
-%define packager    Cloud Solutions
+%define packager    CloudSolutions
 %define vendor      David Pavlik
 %define group       NFLX/Application
 %define buildroot %{_topdir}/BUILD
@@ -26,7 +20,7 @@ Packager:  %{packager}
 Vendor:    %{vendor}
 Group:     %{group}
 AutoReqProv: no
-Requires:  nflx-cloudsol-python-libs >= 1.154, nflx-python27, nflx-python27-setuptools, nflx-python27-pip, nflx-python27-thrift, nflx-python27-pycassa
+Requires: nflx-cloudsol-python-libs >= 1.199, nflx-rd, nflx-python27, nflx-python27-setuptools, nflx-python27-pip, nflx-python27-thrift, nflx-python27-pycassa, nflx-rex >= 1.5
 
 %description
 @build.metadata@
@@ -40,9 +34,15 @@ rm -rf $RPM_BUILD_ROOT/*
 /
 
 %post
-/usr/bin/pip-2.7 -v install -M -r /apps/notifications/additional/pip_requirements.txt
-/bin/cp /apps/notifications/additional/notifications /etc/init.d/notifications
-/sbin/chkconfig notifications on
-/sbin/chkconfig iptables on 
-/sbin/chkconfig nflx-tomcat off
+# /usr/bin/pip-2.7 -v install -M -r /apps/blesk/additional/pip.txt
+
+# Add the version
+sed -i "s/__APP_VERSION__/%{release}/g" /service/blesk/run
+
+/bin/cp /apps/blesk/additional/iptables /etc/sysconfig
+/sbin/chkconfig iptables on
+
+# Turn off tomcat
+/sbin/chkconfig --del nflx-tomcat
+
 %postun
