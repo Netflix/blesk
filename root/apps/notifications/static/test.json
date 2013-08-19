@@ -1,9 +1,0 @@
-{
-	"notifications" : [
-		{
-			"type" 		: "alert",
-			"appId" 	: "Asgard",
-			"message"	: "We are launching Nordics, do not push any new code."
-		}
-	]
-}

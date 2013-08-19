@@ -1,6 +1,0 @@
-DEBUG 2013-05-07 15:53:57,357 __init__ 24971 140735311536512 Using environment test
-INFO 2013-05-07 15:53:57,359 server 24971 140735311536512 Starting discovery in environment test, region us-east-1
-DEBUG 2013-05-07 16:03:00,046 __init__ 25078 140735311536512 Using environment test
-INFO 2013-05-07 16:03:00,046 server 25078 140735311536512 Starting discovery in environment test, region us-east-1
-DEBUG 2013-05-07 16:53:34,926 __init__ 25383 140735311536512 Using environment test
-INFO 2013-05-07 16:53:34,927 server 25383 140735311536512 Starting discovery in environment test, region us-east-1
