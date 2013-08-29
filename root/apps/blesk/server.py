@@ -1,13 +1,15 @@
-from bottle import abort, request, response
-
-from Service.Bottle import BottleService, get, post, put, delete
-from Service import BotoService, Route53Service
-
-from bottle import static_file
-
+import os
 import time
 import json
 
+from bottle import abort, request, response
+from Service.Bottle import BottleService, get, post, put, delete
+from Service import BotoService, Route53Service
+from bottle import static_file, route
+
+
+real_root = os.path.dirname(os.path.realpath(__file__))
+print real_root
 
 class Blesk(BottleService, Route53Service):
     """
@@ -21,7 +23,7 @@ class Blesk(BottleService, Route53Service):
     # return the homepage
     @get('/')
     def index(self):
-        return static_file('index.html', root='/apps/blesk/templates/')
+        return static_file('index.html', root=real_root+'/templates/')
 
     @get('/getnotification/<appId>')
     def getnotification(self, appId=''):
@@ -77,6 +79,24 @@ class Blesk(BottleService, Route53Service):
     @get('/healthcheck')
     def healthcheck(self):
         return "ok"
+
+    ## Static Routes for static assets (JS, CSS, images)
+    @route('<filename:re:.*\.js>')
+    def javascripts(filename):
+        filename = os.path.basename(filename)
+        return static_file(filename, root=os.path.join(real_root,'static/js'))
+
+
+    @route('<filename:re:.*\.css>')
+    def sheets(filename):
+        filename = os.path.basename(filename)
+        return static_file(filename, root=os.path.join(real_root,'static/css'))
+
+
+    @route('<filename:re:.*\.(jpg|png|gif|ico)>')
+    def images(filename):
+        filename = os.path.basename(filename)
+        return static_file(filename, root=os.path.join(real_root,'static/img'))        
   
  
 if __name__ == "__main__":
