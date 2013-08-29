@@ -21,7 +21,7 @@ class Blesk(BottleService, Route53Service):
     # return the homepage
     @get('/')
     def index(self):
-        return static_file('index.html', root='templates/')
+        return static_file('index.html', root='/apps/blesk/templates/')
 
     @get('/getnotification/<appId>')
     def getnotification(self, appId=''):
@@ -77,10 +77,7 @@ class Blesk(BottleService, Route53Service):
     @get('/healthcheck')
     def healthcheck(self):
         return "ok"
-
-    @get('/static/<filename>')
-    def javascripts(self,filename):
-        return static_file(filename, root='static/')        
+  
  
 if __name__ == "__main__":
     Blesk.main()
