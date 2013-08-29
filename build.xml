@@ -2,9 +2,7 @@
     <import file="Tools/build/tree2rpm.xml"/>
     <target name="us-bake">
         <parallel>
-            <ezBake application="nflx-eipapi" region="us-east-1" />
-            <ezBake application="nflx-eipapi" region="us-west-1" />
-            <ezBake application="nflx-eipapi" region="eu-west-1" />
+            <ezBake application="nflx-blesk" region="us-west-1" />
         </parallel>
     </target>
 </project>
