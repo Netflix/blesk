@@ -35,6 +35,7 @@ class Blesk(BottleService, Route53Service):
         else:
             return "";
 
+
     @post('/storeNewNotification/<message>/<alertType>/<expire>/<appId>')
     def storeNewNotification(self,message,alertType,expire,appId):
         myNotification = {}
@@ -80,24 +81,6 @@ class Blesk(BottleService, Route53Service):
     def healthcheck(self):
         return "ok"
 
-    ## Static Routes for static assets (JS, CSS, images)
-    @route('<filename:re:.*\.js>')
-    def javascripts(filename):
-        filename = os.path.basename(filename)
-        return static_file(filename, root=os.path.join(real_root,'static/js'))
-
-
-    @route('<filename:re:.*\.css>')
-    def sheets(filename):
-        filename = os.path.basename(filename)
-        return static_file(filename, root=os.path.join(real_root,'static/css'))
-
-
-    @route('<filename:re:.*\.(jpg|png|gif|ico)>')
-    def images(filename):
-        filename = os.path.basename(filename)
-        return static_file(filename, root=os.path.join(real_root,'static/img'))        
-  
  
 if __name__ == "__main__":
     Blesk.main()
