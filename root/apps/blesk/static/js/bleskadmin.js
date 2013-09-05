@@ -8,6 +8,8 @@ function AdminCntrl($scope, $http) {
       .then(function(res){ 
         $scope.notifications = [];
         for (var i in res.data) {
+          console.log(res.data);
+          res.data[i][1].expire = decodeURI(res.data[i][1].expire); 
           $scope.notifications.push(res.data[i][1]);
         }
       });
@@ -16,18 +18,18 @@ function AdminCntrl($scope, $http) {
   loadNotifications();
 
   $scope.save = function() {
-    var formData = {
-      'message' : $scope.notText,
-      'alertType' : $scope.notType,
-      'appId' : $scope.notAppId,
-      'expire' : $scope.notExpireDate
-    };
+
     $http({
       method: 'POST',
-      url: '/storeNewNotification/'+encodeURIComponent($scope.notText)+'/'+encodeURIComponent($scope.notType)+'/'+encodeURIComponent($scope.notExpireDate)+'/'+encodeURIComponent($scope.notAppId)
+      url: '/storeNewNotification',
+      data: 'message='+encodeURI($scope.notText)+'&alertType='+encodeURI($scope.notType)+'&appId='+encodeURI($scope.notAppId)+'&expire='+encodeURI($scope.notExpireDate)
     }).
     success(function(response) {
         loadNotifications();
+        $scope.notText = '';
+        $scope.notType = '';
+        $scope.notExpireDate = '';
+        $scope.notAppId = '';
     }).
     error(function(response) {
         alert('Could not add a new notification :(');
