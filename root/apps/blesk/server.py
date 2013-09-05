@@ -1,6 +1,8 @@
 import os
 import time
 import json
+import cgi
+import re
 
 from bottle import abort, request, response
 from Service.Bottle import BottleService, get, post, put, delete
@@ -35,14 +37,15 @@ class Blesk(BottleService, Route53Service):
         else:
             return "";
 
-
-    @post('/storeNewNotification/<message>/<alertType>/<expire>/<appId>')
-    def storeNewNotification(self,message,alertType,expire,appId):
+    @post('/storeNewNotification')
+    def storeNewNotification(self):
+        formData = request.forms
+        r = re.compile(r"(http://[^ ]+)")
         myNotification = {}
-        myNotification['message'] = message
-        myNotification['alertType'] = alertType
-        myNotification['expire'] = expire
-        myNotification['appId'] = appId
+        myNotification['message'] = r.sub(r'<a href="\1">\1</a>', cgi.escape((formData['message'])))
+        myNotification['alertType'] = cgi.escape(formData['alertType'])
+        myNotification['expire'] = formData['expire']
+        myNotification['appId'] = cgi.escape(formData['appId'])
         myNotification['key'] = str(time.time()+len(myNotification['message']))
         self.notifications.append([myNotification['key'],myNotification])
         return json.dumps(self.notifications)
