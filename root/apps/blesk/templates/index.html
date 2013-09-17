@@ -12,6 +12,7 @@
     <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
     <script src="/static/js/bleskadmin.js"></script>
+    <script defer type="text/javascript" src="http://blesk.prod.netflix.net/static/js/blesk.js?v=2013-09-04_12-22-51"></script>
     <style type="text/css">
       body {
         padding-top: 20px;
@@ -60,6 +61,7 @@
     <script type="text/javascript" src="http://blesk/js/blesk.js"></script>
 
     <div class="container-narrow">
+      <div id="blesk" data-appid="blesk" data-server="http://blesk.prod.netflix.net" data-context-env="prod" data-context-region="us-west-1"></div>
 
       <div class="masthead">
         <div id="blesk" data-appid="blesk"></div>
@@ -78,7 +80,7 @@
               <option>Information</option>
               <option>Tip</option>
             </select>
-            <input type="text" class="span3" ng-model="notAppId" placeholder="Enter App Id" /> <input type="text" class="span3" ng-model="notExpireDate" placeholder="" /> <button style="float: right" ng-click="save()" class="btn btn-success">Create</button>
+            <input type="text" class="span3" ng-model="notAppId" placeholder="Enter App Id" /> <input class="span3" ng-model="notExpireDate"  type="date" /> <button style="float: right" ng-click="save()" class="btn btn-success">Create</button>
 
           </div>
         </div>
@@ -111,7 +113,7 @@
       <hr>
 
       <div class="footer">
-        <p>&copy; Blesk Notification System</p>
+        <p>&copy; Blesk Notification System | <a href="http://go/blesk">Blesk Documentation</a></p>
       </div>
 
     </div> <!-- /container -->
