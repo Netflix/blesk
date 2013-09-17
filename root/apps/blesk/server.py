@@ -3,6 +3,8 @@ import time
 import json
 import cgi
 import re
+import dateutil.parser
+import datetime
 
 from bottle import abort, request, response
 from Service.Bottle import BottleService, get, post, put, delete
@@ -21,6 +23,19 @@ class Blesk(BottleService, Route53Service):
     def __init__(self, *args, **kwargs):
         self.notifications = [];
         super(Blesk, self).__init__(**kwargs)
+
+
+    # clean up expired notifications
+    def cleanUpNotifications(self):
+        now = datetime.datetime.now()
+        for i in self.notifications:
+            try:
+                exp = i[1]['expire']
+                d = dateutil.parser.parse(exp)
+                if d < now:
+                    self.notifications.remove(i)    
+            except:
+                pass
 
     # return the homepage
     @get('/')
@@ -52,12 +67,14 @@ class Blesk(BottleService, Route53Service):
     
     @get('/getAllNotifications/<time>')
     def getAllNotifications(self,time=''):
+        self.cleanUpNotifications()
         response.set_header('Access-Control-Allow-Origin','*');
         return json.dumps(self.notifications)
 
 
     @get('/getAllNotifications')
     def getAllNotificationsNoTime(self):
+        self.cleanUpNotifications()
         response.set_header('Access-Control-Allow-Origin','*');
         return json.dumps(self.notifications)
 
@@ -65,11 +82,13 @@ class Blesk(BottleService, Route53Service):
 
     @get('/getAllNotificationsCached')
     def getAllNotificationsCached(self,time=''):
+        self.cleanUpNotifications()
         response.set_header('Access-Control-Allow-Origin','*');
         return json.dumps(self.notifications)
 
     @get('/getAllNotificationsCached/<time>')
     def getAllNotificationsCachedTime(self,time=''):
+        self.cleanUpNotifications()
         response.set_header('Access-Control-Allow-Origin','*');
         return json.dumps(self.notifications)
 
