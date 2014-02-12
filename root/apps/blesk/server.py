@@ -5,6 +5,7 @@ import cgi
 import re
 import dateutil.parser
 import datetime
+import uuid
 
 from bottle import abort, request, response
 from Service.Bottle import BottleService, get, post, put, delete
@@ -61,7 +62,7 @@ class Blesk(BottleService, Route53Service):
         myNotification['alertType'] = cgi.escape(formData['alertType'])
         myNotification['expire'] = formData['expire']
         myNotification['appId'] = cgi.escape(formData['appId'])
-        myNotification['key'] = str(time.time()+len(myNotification['message']))
+        myNotification['key'] = str(uuid.uuid1())
         self.notifications.append([myNotification['key'],myNotification])
         return json.dumps(self.notifications)
     
@@ -102,6 +103,39 @@ class Blesk(BottleService, Route53Service):
     @get('/healthcheck')
     def healthcheck(self):
         return "ok"
+
+
+    @get('/api/v1/notifications')
+    def api_get_all_notifications(self):
+        response.set_header('Access-Control-Allow-Origin','*');
+        return json.dumps(self.notifications)
+
+
+    @put('/api/v1/notifications')
+    def api_create_notification(self):
+        data = request.body.readline()
+        if not data:
+            abort(400, 'No data received')
+        try:
+            not_js = json.loads(data)
+            myNotification = {}
+            myNotification['message'] = not_js['message']
+            myNotification['alertType'] = not_js['alertType']
+            myNotification['expire'] = not_js['expire']
+            myNotification['appId'] = not_js['appId']
+            myNotification['key'] = str(uuid.uuid1())
+            self.notifications.append([myNotification['key'],myNotification])
+            return json.dumps(self.notifications)        
+        except:
+            abort(400, 'Wrong notification format')
+
+
+    @delete('/api/v1/notifications/<id>')
+    def api_notification_delete(self,id=""):
+        for i in self.notifications:
+            if (str(i[0]) == id):
+                self.notifications.remove(i)
+        return "DELETE Notification " + id        
 
  
 if __name__ == "__main__":
