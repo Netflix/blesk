@@ -7,7 +7,7 @@ Here is a sample request/response for a sample app called 'myApp'
 
 request endpoint:
 ```text
-https://bleskServer/api/v1/app/myApp
+GET https://bleskServer/api/v1/app/myApp
 ```
 
 Sample response Payload (where 123456789 & 987654321 are a unique/random/GUID string)
