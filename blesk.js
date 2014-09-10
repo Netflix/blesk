@@ -3,6 +3,7 @@
     "use strict";
 
     var server = "https://YOUR-BLESK-API-SERVER-HERE",
+        getNotificationsEndpoint = server + "/api/v1/apps/",
         fetchInterval = 10 * 1000, //how often fetch for notifications
         appId = "default",
         notifications = [],
@@ -41,7 +42,7 @@
     function fetchNotifications(applicationId) {
 
         var req = new XMLHttpRequest(),
-            endpoint = server + "/api/v1/apps/" + encodeURIComponent(applicationId) + "?time=" + new Date().getTime();
+            endpoint = getNotificationsEndpoint + encodeURIComponent(applicationId) + "?time=" + new Date().getTime();
 
         req.open("GET", endpoint, true);
         req.onload = function () {
