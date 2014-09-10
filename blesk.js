@@ -3,11 +3,11 @@
     "use strict";
 
     var server = "https://YOUR-BLESK-API-SERVER-HERE",
+        fetchInterval = 10 * 1000, //how often fetch for notifications
         appId = "default",
         notifications = [],
         processedGUIDsHash = {},
-        targetElement,
-        targetElementInnerHtml;
+        targetElement;
 
     // stores key/value in local storage
     function setValue(key, value) {
@@ -52,9 +52,9 @@
             if (!window.killBlesk && document.URL.indexOf('killBlesk') === -1) {
 
                 // Regularly pulling for data
-                setTimeout(function() {
+                setTimeout(function () {
                     fetchNotifications(applicationId);
-                }, 10 * 1000);
+                }, fetchInterval);
 
             }
 
@@ -208,7 +208,6 @@
     function populateVariables() {
         appId = targetElement.getAttribute("data-appid") || "appId";
         server = targetElement.getAttribute("data-endpoint") || server;
-        targetElementInnerHtml = targetElement.innerHTML;
     }
 
     function init() {
