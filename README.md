@@ -4,7 +4,8 @@ Netflix blesk
 Netflix blesk is a lightweight client for pushing notifications to web based applications/sites.
 
 Here is a sample request for a sample app called 'myApp'
-Sample request endpoint:
+
+request endpoint:
 ```text
 https://bleskServer/api/v1/app/myApp
 ```
