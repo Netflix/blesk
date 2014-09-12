@@ -30,3 +30,4 @@ Sample response Payload (where 123456789 & 987654321 are a unique/random/GUID st
 }
 ```
 
+Blesk's original implementation was done by David Pavlik, www.linkedin.com/in/davidpav, now at SpaceX. 
